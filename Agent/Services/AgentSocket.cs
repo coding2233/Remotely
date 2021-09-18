@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Remotely.Agent.Extensions;
 using Remotely.Agent.Interfaces;
+using Remotely.Plugins;
 using Remotely.Shared.Enums;
 using Remotely.Shared.Models;
 using Remotely.Shared.Utilities;
@@ -487,6 +488,11 @@ namespace Remotely.Agent.Services
             _hubConnection.On("TriggerHeartbeat", async () =>
             {
                 await SendHeartbeat();
+            });
+
+            _hubConnection.On("PluginAdpter", (string method, string args) =>
+            {
+                PluginsAdpter.CallPlugins(this, method, _hubConnection, args);
             });
         }
 
